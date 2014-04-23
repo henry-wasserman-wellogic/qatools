@@ -13,7 +13,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>jmeter_utility.UpdateAuthTokens</mainClass>
+              <mainClass>jmxparser.UpdateAuthTokens</mainClass>
             </manifest>
           </archive>
         </configuration>
