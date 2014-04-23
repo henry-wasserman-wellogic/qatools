@@ -35,8 +35,31 @@ public class UpdateAuthTokens
         		"            </RegexExtractor>\n" +
         		"            <hashTree/>";
         
+        String thread_group_xml = 
+        		"               </hashTree>\n" +
+        		"        </hashTree>\n" +
+        		"        <ThreadGroup guiclass=\"ThreadGroupGui\" testclass=\"ThreadGroup\" testname=\"Thread Group\" enabled=\"true\">\n" +
+        		"          <stringProp name=\"ThreadGroup.on_sample_error\">continue</stringProp>\n" +
+        		"         <elementProp name=\"ThreadGroup.main_controller\" elementType=\"LoopController\" guiclass=\"LoopControlPanel\" testclass=\"LoopController\" testname=\"Loop Controller\" enabled=\"true\">\n" +
+        		"            <boolProp name=\"LoopController.continue_forever\">false</boolProp>\n" +
+        		"            <stringProp name=\"LoopController.loops\">1</stringProp>\n" +
+        		"          </elementProp>\n" +
+        		"          <stringProp name=\"ThreadGroup.num_threads\">1</stringProp>\n" +
+        		"          <stringProp name=\"ThreadGroup.ramp_time\">10</stringProp>\n" +
+        		"          <longProp name=\"ThreadGroup.start_time\">1398274240000</longProp>\n" +
+        		"          <longProp name=\"ThreadGroup.end_time\">1398274240000</longProp>\n" +
+        		"          <boolProp name=\"ThreadGroup.scheduler\">false</boolProp>\n" +
+        		"          <stringProp name=\"ThreadGroup.duration\"></stringProp>\n" +
+        		"          <stringProp name=\"ThreadGroup.delay\"></stringProp>\n" +
+        		"        </ThreadGroup>\n" +
+        		"        <hashTree>\n" +
+        		"          <RecordingController guiclass=\"RecordController\" testclass=\"RecordingController\" testname=\"Recording Controller\" enabled=\"true\"/>\n" +
+        		"          <hashTree>";
+
+        
         boolean found_auth_token = false;
         boolean found_login = false;
+        boolean found_logout = false;
         try {
         	List<String> list = FileUtils.readLines(jmx_file);
         	ArrayList<String> new_list = new ArrayList<String>();
@@ -76,15 +99,29 @@ public class UpdateAuthTokens
         			continue;
         		}
         		
+        		//Thread Group xml can be inserted here
+        		if (found_logout && StringUtils.contains(line,"</hashTree>")) {
+        			new_list.add(thread_group_xml);
+        			found_logout = false;
+        			continue;
+        		}
+        		
+        		        		
         		//If we see this then we can start looking for authTokens
         		if (StringUtils.contains(line, "<elementProp name=\"authToken\" elementType=\"HTTPArgument\">")) {
         			found_auth_token = true;
         			continue;
         		}
         		
-        		//If we see this then we can start looking for the place to insert the regular expression extractor xml.
+        		//If we see this then we can start looking for the place to insert the Regular Expression Extractor XML.
         		if (StringUtils.contains(line,  "<HTTPSamplerProxy guiclass=\"HttpTestSampleGui\" testclass=\"HTTPSamplerProxy\" testname=\"/login\" enabled=\"true\">")) {
         			found_login = true;
+        			continue;
+        		}
+        		
+        		//If we see this we can start looking for the place to insert the Thread Group XML
+        		if (StringUtils.contains(line, "testclass=\"HTTPSamplerProxy\" testname=\"/logout")) {
+        			found_logout = true;
         			continue;
         		}
         	
