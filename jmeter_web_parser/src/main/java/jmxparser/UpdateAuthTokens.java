@@ -1,4 +1,4 @@
-package jmeter_utility;
+package jmxparser;
 
 import java.io.File;
 import java.io.IOException;
