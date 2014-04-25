@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;;
 
 public class UpdateAuthTokens
@@ -23,6 +24,8 @@ public class UpdateAuthTokens
         System.out.println( "Fixing " + args[0]);
         
         File jmx_file = new File(args[0]);
+        File new_jmx_file = new File(FilenameUtils.getFullPath(args[0]) + FilenameUtils.removeExtension(args[0]) + "_threaded.jmx");
+        String thread_group_numbered_xml = "";
         
         String reg_extracter_xml =
         		"            <RegexExtractor guiclass=\"RegexExtractorGui\" testclass=\"RegexExtractor\" testname=\"Regular Expression Extractor\" enabled=\"true\">\n" +
@@ -72,6 +75,7 @@ public class UpdateAuthTokens
         	//Put all authTokens that are found into a hash in order to replace them later with the string '${authToken}'
         	int index = -1;
         	int new_index = -1;
+        	int thread_group_counter = 2;
         	for (String line : list) {
         		index++;
         		new_index++;
@@ -101,7 +105,9 @@ public class UpdateAuthTokens
         		
         		//Thread Group xml can be inserted here
         		if (found_logout && StringUtils.contains(line,"</hashTree>")) {
-        			new_list.add(thread_group_xml);
+        			thread_group_numbered_xml = StringUtils.replace(thread_group_xml, "Thread Group", "Thread Group " + Integer.toString(thread_group_counter));
+        			thread_group_counter++;
+        			new_list.add(thread_group_numbered_xml);
         			found_logout = false;
         			continue;
         		}
@@ -143,7 +149,7 @@ public class UpdateAuthTokens
         		
         	}
         	
-        	FileUtils.writeLines(jmx_file, new_list);
+        	FileUtils.writeLines(new_jmx_file, new_list);
  
         }
         catch  (IOException e) {
