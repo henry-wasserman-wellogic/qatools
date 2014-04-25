@@ -24,7 +24,7 @@ public class UpdateAuthTokens
         System.out.println( "Fixing " + args[0]);
         
         File jmx_file = new File(args[0]);
-        File new_jmx_file = new File(FilenameUtils.getFullPath(args[0]) + FilenameUtils.removeExtension(args[0]) + "_threaded.jmx");
+        File new_jmx_file = new File(FilenameUtils.removeExtension(args[0]) + "_threaded.jmx");
         String thread_group_numbered_xml = "";
         
         String reg_extracter_xml =
@@ -74,11 +74,9 @@ public class UpdateAuthTokens
         	
         	//Put all authTokens that are found into a hash in order to replace them later with the string '${authToken}'
         	int index = -1;
-        	int new_index = -1;
         	int thread_group_counter = 2;
         	for (String line : list) {
         		index++;
-        		new_index++;
         		new_list.add(line);
         		
         		//authTokens are put into hash here
@@ -149,6 +147,7 @@ public class UpdateAuthTokens
         	}
         	
         	FileUtils.writeLines(new_jmx_file, new_list);
+        	
  
         }
         catch  (IOException e) {
