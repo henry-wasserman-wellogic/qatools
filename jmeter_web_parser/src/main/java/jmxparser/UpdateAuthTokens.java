@@ -111,7 +111,6 @@ public class UpdateAuthTokens
         			found_logout = false;
         			continue;
         		}
-        		
         		        		
         		//If we see this then we can start looking for authTokens
         		if (StringUtils.contains(line, "<elementProp name=\"authToken\" elementType=\"HTTPArgument\">")) {
