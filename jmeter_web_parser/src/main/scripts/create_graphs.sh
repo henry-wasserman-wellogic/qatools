@@ -1,7 +1,10 @@
 #! /bin/sh
-date=04_29_2014
-input_xml=$date/bowser.xml
-images=$date/images
+#date=04_29_2014
+workspace=$1
+name_of_host=$2
+report_dir=$workspace/jmeter_web_parser/src/main/reports
+input_xml=$report_dir/$name_of_host.xml
+images=$report_dir/images
 
 java -jar /Applications/apache-jmeter-2.11/lib/ext/CMDRunner.jar --tool Reporter --generate-png $images/active_threads_over_time.png --input-jtl $input_xml --plugin-type ThreadsStateOverTime --aggregate-rows yes
 java -jar /Applications/apache-jmeter-2.11/lib/ext/CMDRunner.jar --tool Reporter --generate-png $images/bytes_throughput_over_time.png --input-jtl $input_xml --plugin-type BytesThroughputOverTime
