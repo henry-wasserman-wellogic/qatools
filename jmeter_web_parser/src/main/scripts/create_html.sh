@@ -1,5 +1,5 @@
 #!/bin/sh
-#date=04_29_2014
+
 workspace=$1
 name_of_host=$2
 report_dir=$workspace/jmeter_web_parser/src/main/reports
@@ -12,8 +12,8 @@ images=$qa_tools/$workspace/jmeter_web_parser/src/main/images
 
 /bin/cp $images/*.png $report_dir
 
-echo /usr/bin/xsltproc $xsl_dir/sort_output.xsl $report_dir/$name_of_host.xml > $report_dir/sorted_$name_of_host.xml
-echo /usr/bin/xsltproc $report_xsl $report_dir/sorted_$name_of_host.xml > $report_dir/$name_of_host.html
+echo "/usr/bin/xsltproc $xsl_dir/sort_output.xsl $report_dir/$name_of_host.xml > $report_dir/sorted_$name_of_host.xml"
+echo "/usr/bin/xsltproc $report_xsl $report_dir/sorted_$name_of_host.xml > $report_dir/$name_of_host.html"
 
-/usr/bin/xsltproc $report_dir/$name_of_host.xml > $report_dir/sorted_$name_of_host.xml
-/usr/bin/xsltproc $report_dir/sorted_$name_of_host.xml > $report_dir/$name_of_host.html
+/usr/bin/xsltproc $xsl_dir/sort_output.xsl $report_dir/$name_of_host.xml > $report_dir/sorted_$name_of_host.xml
+/usr/bin/xsltproc $report_xsl $report_dir/sorted_$name_of_host.xml > $report_dir/$name_of_host.html
