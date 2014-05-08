@@ -13,7 +13,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>jmxparser.UpdateAuthTokens</mainClass>
+              <mainClass>jmxparser.NewUpdateAuthTokens</mainClass>
             </manifest>
           </archive>
         </configuration>
