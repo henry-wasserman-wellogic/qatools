@@ -127,15 +127,16 @@ public class NewUpdateAuthTokens
         	List<String> list = FileUtils.readLines(jmx_file);
         	ArrayList<String> new_list = new ArrayList<String>();
         	
-        	Pattern auth_token_pattern = Pattern.compile(".*Argument\\.value\\\"\\>([\\d|\\w]+)\\<.*");
         	Matcher matcher = null;
+        	
+        	Pattern auth_token_pattern = Pattern.compile(".*Argument\\.value\\\"\\>([\\d|\\w]+)\\<.*");
         	Pattern principle_id_pattern = Pattern.compile("/users/([\\d|\\w|\\-]+)/.*");
         	Pattern person_id_pattern = Pattern.compile("/users/groups/([\\d|\\w|\\-]+)/.*");
         	Pattern mailbox_id_pattern = Pattern.compile("/mailboxes/([\\d]+).*");
         	Pattern organization_id_pattern = Pattern.compile("/organizations/([\\d|\\w|\\-]+).*");
         	Pattern folder_id_pattern = Pattern.compile("/mailboxes/.*/folders/([\\d]+).*");
         	Pattern facility_id_pattern = Pattern.compile("/facility_search/([\\d|\\w|\\-]+).*");
-        	Pattern users_facilty_pattern = Pattern.compile(".*/users/[\\d|\\w|\\-]+/facilities.*");
+        	Pattern users_facility_pattern = Pattern.compile(".*/users/[\\d|\\w|\\-]+/facilities.*");
         	Pattern username_pattern = Pattern.compile(".*/([\\w]+\\@[\\w]+\\.com).*");
         	
         	String match = "";
@@ -197,7 +198,7 @@ public class NewUpdateAuthTokens
         				match = matcher.group(1);
         				map.put(match, "principle_id");
         				
-                	matcher = users_facilty_pattern.matcher(line);
+                	matcher = users_facility_pattern.matcher(line);
                 	if (matcher.find()) {
                 		found_user_facilities = true;
                 	}
