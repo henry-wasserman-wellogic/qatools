@@ -15,5 +15,5 @@ images=$qa_tools/$workspace/jmeter_web_parser/src/main/images
 echo /usr/bin/xsltproc --output $report_dir/sorted_$name_of_host.xml $xsl_dir/sort_output.xsl $report_dir/$name_of_host.xml
 echo /usr/bin/xsltproc --output $report_dir/index.html$report_xsl $xsl_dir/sort_output.xsl $report_dir/sorted_$name_of_host.xml
 
-/usr/bin/xsltproc -o $report_dir/sorted_$name_of_host.xml $xsl_dir/sort_output.xsl $report_dir/$name_of_host.xml
-/usr/bin/xsltproc -o $report_dir/index.html$report_xsl $report_dir/sorted_$name_of_host.xml
+/usr/bin/xsltproc --output $report_dir/sorted_$name_of_host.xml $xsl_dir/sort_output.xsl $report_dir/$name_of_host.xml
+/usr/bin/xsltproc --output $report_dir/index.html$report_xsl $xsl_dir/sort_output.xsl $report_dir/sorted_$name_of_host.xml
