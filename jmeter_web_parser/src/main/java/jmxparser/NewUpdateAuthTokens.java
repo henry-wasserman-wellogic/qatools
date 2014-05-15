@@ -27,7 +27,7 @@ public class NewUpdateAuthTokens
         File new_jmx_file = new File(FilenameUtils.removeExtension(args[0]) + "_threaded.jmx");
         String thread_group_numbered_xml = "";
         
-        String reg_extracter_xml =
+        String login_reg_extracter_xml =
         		"            <RegexExtractor guiclass=\"RegexExtractorGui\" testclass=\"RegexExtractor\" testname=\"Regular Expression Extractor\" enabled=\"true\">\n" +
         		"              <stringProp name=\"RegexExtractor.useHeaders\">false</stringProp>\n" +
         		"              <stringProp name=\"RegexExtractor.refname\">authToken</stringProp>\n" +
@@ -84,14 +84,37 @@ public class NewUpdateAuthTokens
 				"          </RegexExtractor>\n" +
 				"          <hashTree/>";
         
-        String facility_id_reg_extractor_xml = 
+        String facility_id_json_extractor = 
                 "		  <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass=\"com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui\" testclass=\"com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor\" testname=\"jp@gc - JSON Path Extractor\" enabled=\"true\">\n" +
                 "		    <stringProp name=\"VAR\">facility_id</stringProp>\n" +
                 "			<stringProp name=\"JSONPATH\">$.memberFacilities[0].recentlySelectedFacilities</stringProp>\n" +
                 "			<stringProp name=\"DEFAULT\">COULD NOT EXTRACT FACILITY_ID</stringProp>\n" +
                 "		  </com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor>\n" +
                 "		  <hashTree/>";
+        
+        String patient_search_json_extractor =
+                "		  <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass=\"com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui\" testclass=\"com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor\" testname=\"jp@gc - JSON Path Extractor\" enabled=\"true\">\n" +
+                "		    <stringProp name=\"VAR\">patient_mpi</stringProp>\n" +
+                "			<stringProp name=\"JSONPATH\">$.[0].mpi</stringProp>\n" +
+                "			<stringProp name=\"DEFAULT\">COULD NOT EXTRACT PATIENT_MPI</stringProp>\n" +
+                "		  </com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor>\n" +
+                "		  <hashTree/>";
+        
+        String version_id_json_extractor =
+                "		  <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass=\"com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui\" testclass=\"com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor\" testname=\"jp@gc - JSON Path Extractor\" enabled=\"true\">\n" +
+                "		    <stringProp name=\"VAR\">version_id</stringProp>\n" +
+                "			<stringProp name=\"JSONPATH\">$.versionId</stringProp>\n" +
+                "			<stringProp name=\"DEFAULT\">COULD NOT EXTRACT VERSION_ID</stringProp>\n" +
+                "		  </com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor>\n" +
+                "		  <hashTree/>";
 
+        String number_of_columns_json_extractor =
+                "		  <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass=\"com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui\" testclass=\"com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor\" testname=\"jp@gc - JSON Path Extractor\" enabled=\"true\">\n" +
+                "		    <stringProp name=\"VAR\">number_of_columns</stringProp>\n" +
+                "			<stringProp name=\"JSONPATH\">$.numberOfColumns</stringProp>\n" +
+                "			<stringProp name=\"DEFAULT\">COULD NOT EXTRACT NUMBER_OF_COLUMNS</stringProp>\n" +
+                "		  </com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor>\n" +
+                "		  <hashTree/>";
     
         String thread_group_xml = 
         		"               </hashTree>\n" +
@@ -122,6 +145,10 @@ public class NewUpdateAuthTokens
         boolean found_organization = false;
         boolean found_folder = false;
         boolean found_user_facilities = false;
+        boolean found_patients_search = false;
+        boolean found_patients_metadata = false;
+        boolean found_metadata_columns = false;
+        boolean found_version_id = false;
         
         try {
         	List<String> list = FileUtils.readLines(jmx_file);
@@ -130,6 +157,7 @@ public class NewUpdateAuthTokens
         	Matcher matcher = null;
         	
         	Pattern auth_token_pattern = Pattern.compile(".*Argument\\.value\\\"\\>([\\d|\\w]+)\\<.*");
+        	Pattern version_id_pattern = Pattern.compile(".*Argument\\.value\\\">([\\d\\w\\-]+).*");
         	Pattern principle_id_pattern = Pattern.compile("/users/([\\d|\\w|\\-]+)/.*");
         	Pattern person_id_pattern = Pattern.compile("/users/groups/([\\d|\\w|\\-]+)/.*");
         	Pattern mailbox_id_pattern = Pattern.compile("/mailboxes/([\\d]+).*");
@@ -138,6 +166,8 @@ public class NewUpdateAuthTokens
         	Pattern facility_id_pattern = Pattern.compile("/facility_search/([\\d|\\w|\\-]+).*");
         	Pattern users_facility_pattern = Pattern.compile(".*/users/[\\d|\\w|\\-]+/facilities.*");
         	Pattern username_pattern = Pattern.compile(".*/([\\w]+\\@[\\w]+\\.com).*");
+        	Pattern patients_mpi_pattern = Pattern.compile("/patients/([\\d|\\w|\\-]+)/.*");
+        	Pattern patients_metadata_pattern = Pattern.compile("/patients/([\\d|\\w|\\-]+)/metadata\\\" enabled=\\\"true\\\">");
         	
         	String match = "";
         	HashMap<String,String> map = new HashMap<String,String>();
@@ -149,6 +179,8 @@ public class NewUpdateAuthTokens
         	//Put all folder_id's that are found into a hash in order to replace them later with the string '${folder_id}'
         	//Put all facility_id's that are found into a hash in order to replace them later with the string'${facility_id}'
         	//Put all usernames that are found into a hash in order to replace them later with the string '${username}'
+        	//Put all patient_mpi that are found into a hash in order to replace them later with the string '${patient_mpi}'
+        	//Put all version_id's that are found into a hash in order to replace them later with the string '${version_id}'
         	int index = -1;
         	int thread_group_counter = 2;
         	for (String line : list) {
@@ -163,7 +195,6 @@ public class NewUpdateAuthTokens
             		continue;
             	}
         		
-        		
         		//authTokens are put into hash here
         		if (found_auth_token && StringUtils.contains(line,"<stringProp name=\"Argument.value\">")) {
         			matcher = auth_token_pattern.matcher(line);
@@ -172,14 +203,33 @@ public class NewUpdateAuthTokens
         				map.put(match, "authToken");
         			}
         			else {
-        				match = "MATCH NOT FOUND";
+        				match = "AUTHTOKEN MATCH NOT FOUND";
         			}
     				found_auth_token = false;
     				continue;
 
         		}
         		
-        		//If we see this we can start looking for the place to insert the facility Regular Expression Extractor XML
+        		if (found_metadata_columns && StringUtils.contains(line, "<elementProp name=\"version_id\" elementType=\"HTTPArgument\">")) {
+        			found_version_id = true;
+        		}
+        		
+        		//version_id's are put into hash here
+        		if (found_metadata_columns && found_version_id && StringUtils.contains(line,"<stringProp name=\"Argument.value\">")) {
+        			matcher = version_id_pattern.matcher(line);
+        			if (matcher.find()) {
+        				match = matcher.group(1);
+        				map.put(match, "version_id");
+        				found_version_id = false;
+        			}
+        			else {
+        				match = "VERSION ID MATCH NOT FOUND";
+        			}
+        			found_metadata_columns = false;
+    				continue;
+
+        		}
+
         		
         		//person_id's are put into hash here
         		if (StringUtils.contains(line, "users/groups")) {
@@ -246,10 +296,42 @@ public class NewUpdateAuthTokens
         				continue;
         			}
         		}
+        		
+        		//patient_mpi's are put into hash here
+        		if (StringUtils.contains(line, "patients/") &&
+        				!StringUtils.contains(line, "/patients/search")) {
+        			matcher = patients_mpi_pattern.matcher(line);
+        			if (matcher.find()) {
+        				match = matcher.group(1);
+        				map.put(match, "patient_mpi");
+        				
+        				//handle the special case for patient metadata
+        				matcher = patients_metadata_pattern.matcher(line);
+        				if (matcher.find()) {
+        					found_patients_metadata = true;
+        				}
+        				//handles the special case for metadata/columns
+        				else if (StringUtils.contains(line,  "/metadata/columns/")) {
+        						found_metadata_columns = true;
+        				}
+        				continue;
+        			}
+        		}
+        		
+        		//facility_id's are put into hash here
+        		if (StringUtils.contains(line, "facility_search/")) {
+        			matcher = facility_id_pattern.matcher(line);
+        			if (matcher.find()) {
+        				match = matcher.group(1);
+        				map.put(match, "facility_id");
+        				continue;
+        			}
+        		}
+        		
 
-        		//Regular Expression Extractor xml can be inserted here
+        		//Login Regular Expression Extractor xml can be inserted here
         		if (found_login && StringUtils.contains(line,"<hashTree>")) {
-        			new_list.add(reg_extracter_xml);
+        			new_list.add(login_reg_extracter_xml);
         			found_login = false;
         			continue;
         		}
@@ -268,10 +350,25 @@ public class NewUpdateAuthTokens
         			continue;
         		}
         		
-        		//Facility Expression Extractor xml can be inserted here
+        		//Facility ID JSON Extractor can be inserted here
         		if (found_user_facilities && StringUtils.contains(line,"<hashTree>")) {
-        			new_list.add(facility_id_reg_extractor_xml);
+        			new_list.add(facility_id_json_extractor);
         			found_user_facilities = false;
+        			continue;
+        		}
+        		
+        		//Patient Search JSON Extractor can be inserted here
+        		if (found_patients_search && StringUtils.contains(line,"<hashTree>")) {
+        			new_list.add(patient_search_json_extractor);
+        			found_patients_search = false;
+        			continue;
+        		}
+        		
+        		//Version ID JSON Extractor can be inserted here
+        		if (found_patients_metadata && StringUtils.contains(line,"<hashTree>")) {
+        			new_list.add(version_id_json_extractor);
+        			new_list.add(number_of_columns_json_extractor);
+        			found_patients_metadata = false;
         			continue;
         		}
 
@@ -290,8 +387,8 @@ public class NewUpdateAuthTokens
         			found_auth_token = true;
         			continue;
         		}
-        		
-        		//If we see this then we can start looking for the place to insert the Regular Expression Extractor XML.
+        		        		
+        		//If we see this then we can start looking for the place to insert the Login Regular Expression Extractor XML.
         		if (StringUtils.contains(line,  "<HTTPSamplerProxy guiclass=\"HttpTestSampleGui\" testclass=\"HTTPSamplerProxy\" testname=\"/login\" enabled=\"true\">")) {
         			found_login = true;
         			continue;
@@ -314,6 +411,13 @@ public class NewUpdateAuthTokens
         			found_organization = true;
         			continue;
         		}
+        		
+        		//If we see this we can start looking for the place to insert the patients_search JSON Path Extractor XML
+        		if (StringUtils.contains(line, "testclass=\"HTTPSamplerProxy\" testname=\"/patients/search\"")) {
+        			found_patients_search = true;
+        			continue;
+        		}
+        		
         	}
         	
         	//For each authToken in the hash replace it with the string '${authToken}'
@@ -346,7 +450,12 @@ public class NewUpdateAuthTokens
         				else if (entry.getValue().equals("facility_id")) {
         					line = StringUtils.replace(line, entry.getKey(), "${facility_id}",-1);
         				}
-        				
+        				else if (entry.getValue().equals("patient_mpi")) {
+        					line = StringUtils.replace(line, entry.getKey(), "${patient_mpi}",-1);
+        				}
+        				else if (entry.getValue().equals("version_id")) {
+        					line = StringUtils.replace(line,  entry.getKey(),  "${version_id}",-1);
+        				}
         				if (entry.getValue().equals("username")) {
         					line = StringUtils.replace(line, entry.getKey(),  "${username}",-1);
         				}
