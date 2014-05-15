@@ -27,6 +27,102 @@ public class NewUpdateAuthTokens
         File new_jmx_file = new File(FilenameUtils.removeExtension(args[0]) + "_threaded.jmx");
         String thread_group_numbered_xml = "";
         
+        String metadata_columns_loop_controller =
+		        "<LoopController guiclass=\"LoopControlPanel\" testclass=\"LoopController\" testname=\"Loop Controller\" enabled=\"true\">\n" +
+			    "    <boolProp name=\"LoopController.continue_forever\">true</boolProp>\n" +
+			    "    <stringProp name=\"LoopController.loops\">${number_of_columns}</stringProp>\n" +
+			    "  </LoopController>\n" +
+			    "  <hashTree>\n" +
+			    "    <CounterConfig guiclass=\"CounterConfigGui\" testclass=\"CounterConfig\" testname=\"Counter\" enabled=\"true\">\n" +
+			    "      <stringProp name=\"CounterConfig.start\">1</stringProp>\n" +
+			    "      <stringProp name=\"CounterConfig.end\">${number_of_columns}</stringProp>\n" +
+			    "      <stringProp name=\"CounterConfig.incr\">1</stringProp>\n" +
+			    "      <stringProp name=\"CounterConfig.name\">column</stringProp>\n" +
+			    "      <stringProp name=\"CounterConfig.format\"></stringProp>\n" +
+			    "      <boolProp name=\"CounterConfig.per_user\">false</boolProp>\n" +
+			    "    </CounterConfig>\n" +
+			    "    <hashTree/>\n" +
+			    "    <HTTPSamplerProxy guiclass=\"HttpTestSampleGui\" testclass=\"HTTPSamplerProxy\" testname=\"/patients/${patient_mpi}/metadata/columns/${column}\" enabled=\"true\">\n" +
+			    "      <elementProp name=\"HTTPsampler.Arguments\" elementType=\"Arguments\" guiclass=\"HTTPArgumentsPanel\" testclass=\"Arguments\" enabled=\"true\">\n" +
+			    "        <collectionProp name=\"Arguments.arguments\">\n" +
+			    "          <elementProp name=\"authToken\" elementType=\"HTTPArgument\">\n" +
+			    "            <boolProp name=\"HTTPArgument.always_encode\">false</boolProp>\n" +
+			    "            <stringProp name=\"Argument.name\">authToken</stringProp>\n" +
+			    "            <stringProp name=\"Argument.value\">${authToken}</stringProp>\n" +
+			    "            <stringProp name=\"Argument.metadata\">=</stringProp>\n" +
+			    "            <boolProp name=\"HTTPArgument.use_equals\">true</boolProp>\n" +
+			    "          </elementProp>\n" +
+			    "          <elementProp name=\"organizations\" elementType=\"HTTPArgument\">\n" +
+			    "            <boolProp name=\"HTTPArgument.always_encode\">false</boolProp>\n" +
+			    "            <stringProp name=\"Argument.name\">organizations</stringProp>\n" +
+			    "            <stringProp name=\"Argument.value\">all</stringProp>\n" +
+			    "            <stringProp name=\"Argument.metadata\">=</stringProp>\n" +
+			    "            <boolProp name=\"HTTPArgument.use_equals\">true</boolProp>\n" +
+			    "          </elementProp>\n" +
+			    "          <elementProp name=\"version_id\" elementType=\"HTTPArgument\">\n" +
+			    "            <boolProp name=\"HTTPArgument.always_encode\">false</boolProp>\n" +
+			    "            <stringProp name=\"Argument.name\">version_id</stringProp>\n" +
+			    "            <stringProp name=\"Argument.value\">${version_id}</stringProp>\n" +
+			    "            <stringProp name=\"Argument.metadata\">=</stringProp>\n" +
+			    "            <boolProp name=\"HTTPArgument.use_equals\">true</boolProp>\n" +
+			    "          </elementProp>\n" +
+			    "          <elementProp name=\"_\" elementType=\"HTTPArgument\">\n" +
+			    "            <boolProp name=\"HTTPArgument.always_encode\">false</boolProp>\n" +
+			    "            <stringProp name=\"Argument.name\">_</stringProp>\n" +
+			    "            <stringProp name=\"Argument.value\">1400016523683</stringProp>\n" +
+			    "            <stringProp name=\"Argument.metadata\">=</stringProp>\n" +
+			    "            <boolProp name=\"HTTPArgument.use_equals\">true</boolProp>\n" +
+			    "          </elementProp>\n" +
+			    "        </collectionProp>\n" +
+			    "      </elementProp>\n" +
+			    "      <stringProp name=\"HTTPSampler.domain\">${servername}</stringProp>\n" +
+			    "      <stringProp name=\"HTTPSampler.port\">443</stringProp>\n" +
+			    "      <stringProp name=\"HTTPSampler.connect_timeout\"></stringProp>\n" +
+			    "      <stringProp name=\"HTTPSampler.response_timeout\"></stringProp>\n" +
+			    "      <stringProp name=\"HTTPSampler.protocol\">https</stringProp>\n" +
+			    "      <stringProp name=\"HTTPSampler.contentEncoding\"></stringProp>\n" +
+			    "      <stringProp name=\"HTTPSampler.path\">/patients/${patient_mpi}/metadata/columns/${column}</stringProp>\n" +
+			    "      <stringProp name=\"HTTPSampler.method\">GET</stringProp>\n" +
+			    "      <boolProp name=\"HTTPSampler.follow_redirects\">true</boolProp>\n" +
+			    "      <boolProp name=\"HTTPSampler.auto_redirects\">false</boolProp>\n" +
+			    "      <boolProp name=\"HTTPSampler.use_keepalive\">true</boolProp>\n" +
+			    "      <boolProp name=\"HTTPSampler.DO_MULTIPART_POST\">false</boolProp>\n" +
+			    "      <boolProp name=\"HTTPSampler.monitor\">false</boolProp>\n" +
+			    "      <stringProp name=\"HTTPSampler.embedded_url_re\"></stringProp>\n" +
+			    "    </HTTPSamplerProxy>\n" +
+			    "    <hashTree>\n" +
+			    "    <HeaderManager guiclass=\"HeaderPanel\" testclass=\"HeaderManager\" testname=\"HTTP Header Manager\" enabled=\"true\">\n" +
+			    "      <collectionProp name=\"HeaderManager.headers\">\n" +
+			    "        <elementProp name=\"Accept-Language\" elementType=\"Header\">\n" +
+			    "          <stringProp name=\"Header.name\">Accept-Language</stringProp>\n" +
+			    "          <stringProp name=\"Header.value\">en-US,en;q=0.8</stringProp>\n" +
+			    "        </elementProp>\n" +
+			    "        <elementProp name=\"Accept\" elementType=\"Header\">\n" +
+			    "          <stringProp name=\"Header.name\">Accept</stringProp>\n" +
+			    "          <stringProp name=\"Header.value\">application/json, text/javascript, */*; q=0.01</stringProp>\n" +
+			    "        </elementProp>\n" +
+			    "        <elementProp name=\"User-Agent\" elementType=\"Header\">\n" +
+			    "          <stringProp name=\"Header.name\">User-Agent</stringProp>\n" +
+			    "          <stringProp name=\"Header.value\">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36</stringProp>\n" +
+			    "        </elementProp>\n" +
+			    "        <elementProp name=\"Accept-Encoding\" elementType=\"Header\">\n" +
+			    "          <stringProp name=\"Header.name\">Accept-Encoding</stringProp>\n" +
+			    "          <stringProp name=\"Header.value\">gzip,deflate,sdch</stringProp>\n" +
+			    "        </elementProp>\n" +
+			    "        <elementProp name=\"Referer\" elementType=\"Header\">\n" +
+			    "          <stringProp name=\"Header.name\">Referer</stringProp>\n" +
+			    "          <stringProp name=\"Header.value\">https://${servername}/</stringProp>\n" +
+			    "        </elementProp>\n" +
+			    "        <elementProp name=\"X-Requested-With\" elementType=\"Header\">\n" +
+			    "          <stringProp name=\"Header.name\">X-Requested-With</stringProp>\n" +
+			    "          <stringProp name=\"Header.value\">XMLHttpRequest</stringProp>\n" +
+			    "        </elementProp>\n" +
+			    "      </collectionProp>\n" +
+			    "    </HeaderManager>\n" +
+			    "    <hashTree/>\n" +
+			    "  </hashTree>\n" +
+			    "</hashTree>";
+
         String login_reg_extracter_xml =
         		"            <RegexExtractor guiclass=\"RegexExtractorGui\" testclass=\"RegexExtractor\" testname=\"Regular Expression Extractor\" enabled=\"true\">\n" +
         		"              <stringProp name=\"RegexExtractor.useHeaders\">false</stringProp>\n" +
@@ -136,19 +232,20 @@ public class NewUpdateAuthTokens
         		"        <hashTree>\n" +
         		"          <RecordingController guiclass=\"RecordController\" testclass=\"RecordingController\" testname=\"Recording Controller\" enabled=\"true\"/>\n" +
         		"          <hashTree>";
-
         
         boolean found_auth_token = false;
         boolean found_login = false;
         boolean found_logout = false;
         boolean found_mailbox = false;
         boolean found_organization = false;
-        boolean found_folder = false;
         boolean found_user_facilities = false;
         boolean found_patients_search = false;
         boolean found_patients_metadata = false;
         boolean found_metadata_columns = false;
         boolean found_version_id = false;
+        boolean start_looking_for_column_loopcount_insert = false;
+        boolean add_line = true;
+        boolean found_hash_tree = false;
         
         try {
         	List<String> list = FileUtils.readLines(jmx_file);
@@ -185,7 +282,26 @@ public class NewUpdateAuthTokens
         	int thread_group_counter = 2;
         	for (String line : list) {
         		index++;
-        		new_list.add(line);
+        		
+        		//We want to remove all static nodes that have /metadata/columns all the way up to the  </hashTree> tag
+        		//These nodes will be called dynamically
+        		if (StringUtils.contains(line, "/metadata/columns")) {
+        			add_line = false;
+        			found_hash_tree = false;
+        		}
+        		
+        		if (found_hash_tree) {
+        			found_hash_tree = false;
+        			add_line = true;
+        		}
+
+        		if (StringUtils.contains(line,  "</hashTree>")) {
+        			found_hash_tree = true;
+        		}
+     		
+        		if (add_line) {
+        			new_list.add(line);
+        		}
         		
         		//usernames are put into hash here
         		matcher = username_pattern.matcher(line);
@@ -229,7 +345,6 @@ public class NewUpdateAuthTokens
     				continue;
 
         		}
-
         		
         		//person_id's are put into hash here
         		if (StringUtils.contains(line, "users/groups")) {
@@ -314,8 +429,11 @@ public class NewUpdateAuthTokens
         				else if (StringUtils.contains(line,  "/metadata/columns/")) {
         						found_metadata_columns = true;
         				}
+
         				continue;
         			}
+        			
+        			//We also need to check here to start looking for the metadata column loop counter.
         		}
         		
         		//facility_id's are put into hash here
@@ -327,7 +445,6 @@ public class NewUpdateAuthTokens
         				continue;
         			}
         		}
-        		
 
         		//Login Regular Expression Extractor xml can be inserted here
         		if (found_login && StringUtils.contains(line,"<hashTree>")) {
@@ -369,10 +486,16 @@ public class NewUpdateAuthTokens
         			new_list.add(version_id_json_extractor);
         			new_list.add(number_of_columns_json_extractor);
         			found_patients_metadata = false;
+        			start_looking_for_column_loopcount_insert = true;
         			continue;
         		}
-
-
+        		
+        		if (start_looking_for_column_loopcount_insert && StringUtils.contains(line,  "</hashTree>")) {
+        			new_list.add(metadata_columns_loop_controller);
+        			start_looking_for_column_loopcount_insert = false;
+        			continue;
+        		}
+        		
         		//Thread Group xml can be inserted here
         		if (found_logout && StringUtils.contains(line,"</hashTree>")) {
         			thread_group_numbered_xml = StringUtils.replace(thread_group_xml, "Thread Group", "Thread Group " + Integer.toString(thread_group_counter));
@@ -439,10 +562,11 @@ public class NewUpdateAuthTokens
         					line = StringUtils.replace(line, entry.getKey(), "${person_id}",-1);
         				}
         				else if (entry.getValue().equals("mailbox_id")) {
-        					line = StringUtils.replace(line, entry.getKey(), "${mailbox_id}",-1);
+        					//line = StringUtils.replace(line, entry.getKey(), "${mailbox_id}",-1);
+        					line = StringUtils.replace(line, "/mailboxes/" + entry.getKey() + "/", "/mailboxes/${mailbox_id}/",-1);
         				}
         				else if (entry.getValue().equals("folder_id")) {
-        					line = StringUtils.replace(line, entry.getKey(), "${folder_id}",-1);
+        					line = StringUtils.replace(line, "/folders/" +entry.getKey() + "/", "/folders/${folder_id}/",-1);
         				}
         				else if (entry.getValue().equals("organization_id")) {
         					line = StringUtils.replace(line, entry.getKey(), "${organization_id}",-1);
