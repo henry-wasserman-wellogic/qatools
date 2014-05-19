@@ -770,7 +770,8 @@ public class NewUpdateAuthTokens
         		//These nodes will be called dynamically
         		if (StringUtils.contains(line, "/metadata/columns") ||
         				StringUtils.contains(line, "/metadata/encounters/") ||
-        				StringUtils.contains(line,  "document_encounter")) {
+        				StringUtils.contains(line,  "document_encounter") ||
+        				StringUtils.contains(line,  "medications")) {
         			add_line = false;
         			found_hash_tree = false;
         		}
