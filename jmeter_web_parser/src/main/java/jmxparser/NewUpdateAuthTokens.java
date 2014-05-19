@@ -520,6 +520,78 @@ public class NewUpdateAuthTokens
           "      </HeaderManager>\n" +
           "      <hashTree/>\n" +
           "    </hashTree>\n" +
+          "    <HTTPSamplerProxy guiclass=\"HttpTestSampleGui\" testclass=\"HTTPSamplerProxy\" testname=\"/patients/${patient_mpi}/medications/${encounter_id}/summary\" enabled=\"true\">\n" +
+          "      <elementProp name=\"HTTPsampler.Arguments\" elementType=\"Arguments\" guiclass=\"HTTPArgumentsPanel\" testclass=\"Arguments\" enabled=\"true\">\n" +
+          "        <collectionProp name=\"Arguments.arguments\">\n" +
+          "          <elementProp name=\"lookupExternalPharmacyInfo\" elementType=\"HTTPArgument\">\n" +
+          "            <boolProp name=\"HTTPArgument.always_encode\">false</boolProp>\n" +
+          "            <stringProp name=\"Argument.name\">lookupExternalPharmacyInfo</stringProp>\n" +
+          "            <stringProp name=\"Argument.value\">true</stringProp>\n" +
+          "            <stringProp name=\"Argument.metadata\">=</stringProp>\n" +
+          "            <boolProp name=\"HTTPArgument.use_equals\">true</boolProp>\n" +
+          "          </elementProp>\n" +
+          "          <elementProp name=\"authToken\" elementType=\"HTTPArgument\">\n" +
+          "            <boolProp name=\"HTTPArgument.always_encode\">false</boolProp>\n" +
+          "            <stringProp name=\"Argument.name\">authToken</stringProp>\n" +
+          "            <stringProp name=\"Argument.value\">${authToken}</stringProp>\n" +
+          "            <stringProp name=\"Argument.metadata\">=</stringProp>\n" +
+          "            <boolProp name=\"HTTPArgument.use_equals\">true</boolProp>\n" +
+          "          </elementProp>\n" +
+          "          <elementProp name=\"_\" elementType=\"HTTPArgument\">\n" +
+          "            <boolProp name=\"HTTPArgument.always_encode\">false</boolProp>\n" +
+          "            <stringProp name=\"Argument.name\">_</stringProp>\n" +
+          "            <stringProp name=\"Argument.value\">1400016523708</stringProp>\n" +
+          "            <stringProp name=\"Argument.metadata\">=</stringProp>\n" +
+          "            <boolProp name=\"HTTPArgument.use_equals\">true</boolProp>\n" +
+          "          </elementProp>\n" +
+          "        </collectionProp>\n" +
+          "      </elementProp>\n" +
+          "      <stringProp name=\"HTTPSampler.domain\">${servername}</stringProp>\n" +
+          "      <stringProp name=\"HTTPSampler.port\">443</stringProp>\n" +
+          "      <stringProp name=\"HTTPSampler.connect_timeout\"></stringProp>\n" +
+          "      <stringProp name=\"HTTPSampler.response_timeout\"></stringProp>\n" +
+          "      <stringProp name=\"HTTPSampler.protocol\">https</stringProp>\n" +
+          "      <stringProp name=\"HTTPSampler.contentEncoding\"></stringProp>\n" +
+          "      <stringProp name=\"HTTPSampler.path\">/patients/${patient_mpi}/medications/${encounter_id}/summary</stringProp>\n" +
+          "      <stringProp name=\"HTTPSampler.method\">GET</stringProp>\n" +
+          "      <boolProp name=\"HTTPSampler.follow_redirects\">true</boolProp>\n" +
+          "      <boolProp name=\"HTTPSampler.auto_redirects\">false</boolProp>\n" +
+          "      <boolProp name=\"HTTPSampler.use_keepalive\">true</boolProp>\n" +
+          "      <boolProp name=\"HTTPSampler.DO_MULTIPART_POST\">false</boolProp>\n" +
+          "      <boolProp name=\"HTTPSampler.monitor\">false</boolProp>\n" +
+          "      <stringProp name=\"HTTPSampler.embedded_url_re\"></stringProp>\n" +
+          "    </HTTPSamplerProxy>\n" +
+          "    <hashTree>\n" +
+          "      <HeaderManager guiclass=\"HeaderPanel\" testclass=\"HeaderManager\" testname=\"HTTP Header Manager\" enabled=\"true\">\n" +
+          "        <collectionProp name=\"HeaderManager.headers\">\n" +
+          "          <elementProp name=\"Accept-Language\" elementType=\"Header\">\n" +
+          "            <stringProp name=\"Header.name\">Accept-Language</stringProp>\n" +
+          "            <stringProp name=\"Header.value\">en-US,en;q=0.8</stringProp>\n" +
+          "          </elementProp>\n" +
+          "          <elementProp name=\"Accept\" elementType=\"Header\">\n" +
+          "            <stringProp name=\"Header.name\">Accept</stringProp>\n" +
+          "            <stringProp name=\"Header.value\">application/json, text/javascript, */*; q=0.01</stringProp>\n" +
+          "          </elementProp>\n" +
+          "          <elementProp name=\"User-Agent\" elementType=\"Header\">\n" +
+          "            <stringProp name=\"Header.name\">User-Agent</stringProp>\n" +
+          "            <stringProp name=\"Header.value\">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36</stringProp>\n" +
+          "          </elementProp>\n" +
+          "          <elementProp name=\"Accept-Encoding\" elementType=\"Header\">\n" +
+          "            <stringProp name=\"Header.name\">Accept-Encoding</stringProp>\n" +
+          "            <stringProp name=\"Header.value\">gzip,deflate,sdch</stringProp>\n" +
+          "          </elementProp>\n" +
+          "          <elementProp name=\"Referer\" elementType=\"Header\">\n" +
+          "            <stringProp name=\"Header.name\">Referer</stringProp>\n" +
+          "            <stringProp name=\"Header.value\">https://${servername}/</stringProp>\n" +
+          "          </elementProp>\n" +
+          "          <elementProp name=\"X-Requested-With\" elementType=\"Header\">\n" +
+          "            <stringProp name=\"Header.name\">X-Requested-With</stringProp>\n" +
+          "            <stringProp name=\"Header.value\">XMLHttpRequest</stringProp>\n" +
+          "          </elementProp>\n" +
+          "        </collectionProp>\n" +
+          "      </HeaderManager>\n" +
+          "      <hashTree/>\n" +
+          "    </hashTree>\n" +
           "  </hashTree>\n" +
           "</hashTree>";
 	
@@ -696,7 +768,9 @@ public class NewUpdateAuthTokens
         		
         		//We want to remove all static nodes that have /metadata/columns all the way up to the  </hashTree> tag
         		//These nodes will be called dynamically
-        		if (StringUtils.contains(line, "/metadata/columns")) {
+        		if (StringUtils.contains(line, "/metadata/columns") ||
+        				StringUtils.contains(line, "/metadata/encounters/") ||
+        				StringUtils.contains(line,  "document_encounter")) {
         			add_line = false;
         			found_hash_tree = false;
         		}
@@ -735,6 +809,7 @@ public class NewUpdateAuthTokens
         		if (add_line) {
         			new_list.add(line);
         		}
+        		
         		
         		//usernames are put into hash here
         		matcher = username_pattern.matcher(line);
