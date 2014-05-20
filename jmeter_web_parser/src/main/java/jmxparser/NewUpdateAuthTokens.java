@@ -132,7 +132,7 @@ public class NewUpdateAuthTokens
           "    <boolProp name=\"IfController.evaluateAll\">false</boolProp>\n" +
           "  </IfController>\n" +
           "  <hashTree>\n" +
-          "    <HTTPSamplerProxy guiclass=\"HttpTestSampleGui\" testclass=\"HTTPSamplerProxy\" testname=\"/patients/${patient_mpi}/metadata/encounters/47592bab-f1ba-411d-bc0d-11faa40a68e3/rowdata\" enabled=\"true\">\n" +
+          "    <HTTPSamplerProxy guiclass=\"HttpTestSampleGui\" testclass=\"HTTPSamplerProxy\" testname=\"/patients/${patient_mpi}/metadata/encounters/${encounter_id}/rowdata\" enabled=\"true\">\n" +
           "      <elementProp name=\"HTTPsampler.Arguments\" elementType=\"Arguments\" guiclass=\"HTTPArgumentsPanel\" testclass=\"Arguments\" enabled=\"true\">\n" +
           "        <collectionProp name=\"Arguments.arguments\">\n" +
           "          <elementProp name=\"authToken\" elementType=\"HTTPArgument\">\n" +
@@ -218,7 +218,7 @@ public class NewUpdateAuthTokens
           "      </HeaderManager>\n" +
           "      <hashTree/>\n" +
           "    </hashTree>\n" +
-          "    <HTTPSamplerProxy guiclass=\"HttpTestSampleGui\" testclass=\"HTTPSamplerProxy\" testname=\"/patients/${patient_mpi}/metadata/encounters/47592bab-f1ba-411d-bc0d-11faa40a68e3/celldata\" enabled=\"true\">\n" +
+          "    <HTTPSamplerProxy guiclass=\"HttpTestSampleGui\" testclass=\"HTTPSamplerProxy\" testname=\"/patients/${patient_mpi}/metadata/encounters/${encounter_id}/celldata\" enabled=\"true\">\n" +
           "      <elementProp name=\"HTTPsampler.Arguments\" elementType=\"Arguments\" guiclass=\"HTTPArgumentsPanel\" testclass=\"Arguments\" enabled=\"true\">\n" +
           "        <collectionProp name=\"Arguments.arguments\">\n" +
           "          <elementProp name=\"authToken\" elementType=\"HTTPArgument\">\n" +
